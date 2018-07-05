@@ -19,6 +19,7 @@
 
 @implementation PPDataBase
 
+#pragma mark init
 + (instancetype)databaseWithPath:(NSString *)dbPath
 {
     return [PPDataBase databaseWithPath:dbPath isBase64Encode:NO];
@@ -32,6 +33,7 @@
 }
 
 
+#pragma mark 增
 - (BOOL)addObject:(id<PPDataModelProtocol>)obj
 {
     return [self addObject:obj WithTableName:NSStringFromClass([obj class])];
@@ -80,6 +82,65 @@
     return !(array.count > 0);
 }
 
+#pragma mark 删
+
+- (BOOL)deleteObject:(id<PPDataModelProtocol>)obj
+{
+    if (!obj) {
+        return NO;
+    }
+    NSString *tableName = NSStringFromClass([obj class]);
+    return [self deleteObject:obj withTableName:tableName];
+}
+
+
+- (BOOL)deleteObject:(id<PPDataModelProtocol>)obj withTableName:(NSString *)tableName
+{
+    if (obj) {
+        if (!tableName || [tableName isEqualToString:@""]) {
+            tableName = NSStringFromClass([obj class]);
+        }
+        NSString *query = [self formatDeleteSQLWithObjc:obj withTableName:tableName];
+        
+        __block BOOL isSuccess = NO;
+        [self.dbQueue inDatabase:^(FMDatabase *db) {
+            isSuccess = [db executeUpdate:query,nil];
+        }];
+        
+        return isSuccess;
+    }
+    
+    return NO;
+    
+}
+
+
+- (BOOL)deleteObjects:(NSArray<id<PPDataModelProtocol>>*)objs
+{
+    return [self deleteObjects:objs withTableName:nil];
+}
+
+- (BOOL)deleteObjects:(NSArray<id<PPDataModelProtocol>>*)objs withTableName:(NSString*)tableName
+{
+    __block BOOL isSuccess = NO;
+    [self.dbQueue inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
+        __block NSString* sheetName = tableName;
+        [objs enumerateObjectsUsingBlock:^(id<PPDataModelProtocol>  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if (!sheetName || [sheetName isEqualToString:@""]) {
+                sheetName = NSStringFromClass([obj class]);
+            }
+            NSString *query = [self formatDeleteSQLWithObjc:obj withTableName:sheetName];
+            isSuccess = [db executeUpdate:query,nil];
+            if (!isSuccess) {
+                *rollback = YES;
+            }
+        }];
+    }];
+    return isSuccess;
+}
+
+
+#pragma mark 查
 // 获取数据表中的全部数据
 - (NSArray*)getAllObjectsWithClass:(Class)clazz withTableName:(NSString*)tableName
 {

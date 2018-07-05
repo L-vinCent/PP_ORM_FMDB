@@ -56,5 +56,18 @@
 - (NSArray*)getAllObjectsWithClass:(Class)clazz withTableName:(NSString*)tableName;
 
 
+/**
+ 从数据库中删除一条(组)数据
+ @breif:使用第一种或者不传tableName 则默认使用类名作为表名
+ 
+ @param obj <需要遵守GDataObjectProtocol>
+ @return YES/NO
+ */
+- (BOOL)deleteObject:(id<PPDataModelProtocol>)obj;
+- (BOOL)deleteObject:(id<PPDataModelProtocol>)obj withTableName:(NSString *)tableName;
+- (BOOL)deleteObjects:(NSArray<id<PPDataModelProtocol>>*)objs;
+- (BOOL)deleteObjects:(NSArray<id<PPDataModelProtocol>>*)objs withTableName:(NSString*)tableName;
+
+
 
 @end

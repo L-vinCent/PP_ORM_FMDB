@@ -53,6 +53,7 @@
                        @"单条数据插入",
                        @"批量数据插入,开启事务",
                        @"查询所有数据,开启事务",
+                       @"根据主键删除模型",
                        ];
     }
     return _dataArray;
@@ -61,10 +62,10 @@
 - (void)insertOneRowData
 {
     PPSingleTestModel *model = [[PPSingleTestModel alloc]init];
-    model.testName = @"哈哈哈";
+    model.testName = @"哈";
     model.testScore = 88;
-    model.testStuId = 2;
     model.testTeacher = @"大老师";
+    model.addId = 1;
     BOOL isSucess = [self.database addObject:model];
     NSLog(@"isSucess -- 单条数据插入成功%d",isSucess);
 
@@ -106,7 +107,17 @@
   
 }
 
-
+-(void)deleteByMainKey
+{
+    
+    NSArray * all = [self.database getAllObjectsWithClass:[PPSingleTestModel class]];
+    if(!all.count) return;
+    PPSingleTestModel *model = all[0];
+    BOOL delete = [self.database deleteObject:model];
+    NSLog(@"删除状态 --- %d",delete);
+    
+    
+}
 
 #pragma mark -- TableView DataSource
 
@@ -149,6 +160,11 @@
     if (indexPath.row == 2) {
         
         [self getAllSQLData];
+    }
+    
+    if (indexPath.row == 3) {
+        
+        [self deleteByMainKey];
     }
 }
 @end

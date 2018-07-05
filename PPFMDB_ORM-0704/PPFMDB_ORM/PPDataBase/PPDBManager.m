@@ -66,7 +66,9 @@
                     isAuto = YES;
                 }
 
-                [self createTableSingleKey:db table_name:tableName fileds:fileds primaryKey:property_name_array[0] objClass:objClass];
+//                [self createTableSingleKey:db table_name:tableName fileds:fileds isAutoPrimaryKey:isAuto primaryKey:property_name_array[0]  objClass:objClass];
+
+                [self createTable:db table_name:tableName fileds:fileds isAutoPrimaryKey:isAuto primaryKey:property_name_array objClass:objClass];
                 
                 [rs close];
                 return ;
@@ -92,6 +94,91 @@
     
 }
 
+#pragma mark - table Create Method
+
+- (void)createTable:(FMDatabase *)db table_name:(NSString *)table_name fileds:(NSArray *)fileds isAutoPrimaryKey:(BOOL)isAuto primaryKey:(NSArray<NSString *> *)primaryKey objClass:(Class)objClass
+{
+    if (isAuto) { //自增主键
+        [self createTableAutoPrimaryKey:db table_name:table_name fileds:fileds objClass:objClass];
+        return;
+    }
+    if (primaryKey.count > 1) {
+        [self createTableMutablePK:db table_name:table_name fileds:fileds primaryKey:primaryKey objClass:objClass];
+    } else {
+        [self createTableSingleKey:db table_name:table_name fileds:fileds primaryKey:primaryKey.firstObject objClass:objClass];
+    }
+}
+
+
+- (void)createTableAutoPrimaryKey:(FMDatabase*)db table_name:(NSString*)table_name fileds:(NSArray*)fileds objClass:(Class)objClass
+{
+    NSMutableString *sql = [[NSMutableString alloc] initWithFormat:@"CREATE TABLE %@ ( PPAUTOPRIMARYKEY integer primary key autoincrement, ", table_name ];
+    
+    for (NSString* property_name in fileds) {
+        
+        objc_property_t objProperty = class_getProperty(objClass, [property_name UTF8String]);
+        NSString* property_key = @"";
+        NSString * propertyname = [self processReservedWord:property_name];
+        NSString *sqlType = nil;
+     
+        if (sqlType == nil) {
+            sqlType =  [self getSqlKindbyProperty:objProperty];
+        }
+        property_key = [NSString stringWithFormat:@"%@ %@,", propertyname,sqlType];
+        [sql appendString:property_key];
+    }
+    
+    [sql deleteCharactersInRange:NSMakeRange([sql length] - 1, 1)];
+    [sql appendString:@")"];
+    
+    [db executeUpdate:sql];
+}
+
+//CREATE TABLE STUDENTS (subjectId TEXT, studentid TEXT, studentname TEXT, constraint pk_id primary key (subjectId, studentid))
+- (void)createTableMutablePK:(FMDatabase*)db table_name:(NSString*)table_name fileds:(NSArray*)fileds primaryKey:(NSArray<NSString *> *)primaryKeyArr objClass:(Class)objClass
+{
+    NSMutableArray *keyArr = [[NSMutableArray alloc] initWithCapacity:primaryKeyArr.count];
+    NSMutableString *sql = [[NSMutableString alloc] initWithFormat:@"CREATE TABLE %@ (", table_name ];
+    
+    for (NSString* property_name in fileds) {
+        
+        objc_property_t objProperty = class_getProperty(objClass, [property_name UTF8String]);
+        NSString* property_key = nil;
+        
+        NSString *sqlType = nil;
+  
+        if (sqlType == nil) {
+            sqlType =  [self getSqlKindbyProperty:objProperty];
+        }
+        
+        
+        if ([primaryKeyArr containsObject:property_name]) {
+            [keyArr addObject:property_name];
+        }
+        NSString * propertyname = [self processReservedWord:property_name];
+        property_key = [NSString stringWithFormat:@"%@ %@, ", propertyname,sqlType];
+        
+        [sql appendString:property_key];
+        
+    }
+    
+    [sql appendFormat:@"CONSTRAINT pk_id PRIMARY KEY ("];
+    
+    for (NSString *key in keyArr) {
+        
+        NSString * keyname = [self processReservedWord:key];
+        [sql appendString:keyname];
+        
+        if (key != keyArr.lastObject) {
+            [sql appendString:@", "];
+        }
+    }
+    
+    [sql appendString:@"))"];
+    
+    [db executeUpdate:sql];
+}
+
 
 - (void)createTableSingleKey:(FMDatabase*)db table_name:(NSString*)table_name fileds:(NSArray*)fileds primaryKey:(NSString*)primaryKey objClass:(Class)objClass
 {
@@ -104,14 +191,14 @@
         NSString* property_key = nil;
         
         NSString *sqlType = nil;
-      
+        
         if (sqlType == nil) {
             sqlType =  [self getSqlKindbyProperty:objProperty];
         }
         
         NSString * propertyname = [self processReservedWord:property_name];
         if ([primaryKey isEqualToString:property_name]) {
-            property_key = [NSString stringWithFormat:@"%@ %@ primary key,", propertyname,sqlType];
+            property_key = [NSString stringWithFormat:@"%@ %@ primary key ,", propertyname,sqlType];
         }else{
             property_key = [NSString stringWithFormat:@"%@ %@,", propertyname, sqlType];
         }
@@ -125,6 +212,110 @@
     
     [db executeUpdate:sql];
 }
+
+
+
+#pragma mark - Delete SQL format Method
+- (NSString *)formatDeleteSQLWithObjc:(id<PPDataModelProtocol>)data_obj withTableName:(NSString*)tableName
+{
+    NSAssert(data_obj, @"参数不完整");
+    
+    NSMutableString *query = nil;
+    
+    if (data_obj) {
+        
+        NSString* table_name = tableName;
+        NSArray* property_name_array = nil;
+        if ([data_obj respondsToSelector:@selector( g_GetCustomPrimarykey)]) {
+            property_name_array = [data_obj  g_GetCustomPrimarykey];
+        } else {
+            property_name_array = @[PPAUTOPRIMARYKEY];
+        }
+        if (property_name_array == nil || property_name_array.count<= 0) {
+            NSAssert(property_name_array, @"can't find primaryKey");
+        }
+        
+        NSString* condition = nil;
+        
+        if (property_name_array.count > 1) {
+            condition = [self formatMutableConditionSQLWithObjc:data_obj pkArr:property_name_array];
+        } else {
+            condition = [self formatSingleConditionSQLWithObjc:data_obj property_name:property_name_array.firstObject];
+        }
+        
+        query = [[NSMutableString alloc] initWithFormat:@"DELETE FROM %@ WHERE %@", table_name, condition];
+    }
+    
+    return query;
+}
+
+- (NSString *)formatMutableConditionSQLWithObjc:(id<PPDataModelProtocol>)data_obj pkArr:(NSArray *)pkArr
+{
+    NSMutableString *condition = [[NSMutableString alloc] init];
+    NSObject *OBJECT = data_obj;
+    for (NSString *property_name in pkArr) {
+        objc_property_t property = class_getProperty([data_obj class], property_name.UTF8String);
+        NSString *proName = [self processReservedWord:property_name];
+        if ([[self getSqlKindbyProperty:property] isEqualToString:@"text"]) {
+            
+            NSString* value = [NSString stringWithFormat:@"%@" , [OBJECT valueForKey:property_name]];
+            NSString* property_sign = [self getPropertySign:property];
+            if ([property_sign isEqualToString:@"@\"NSString\""] ||
+                [property_sign isEqualToString:@"@"]) {
+                value = [ self base64Str:value];
+            }
+            [condition appendString:[NSString stringWithFormat:@"%@ = '%@'", proName, value]];
+        } else {
+            [condition appendString:[NSString stringWithFormat:@"%@ = %@", proName, [[OBJECT valueForKey:property_name] stringValue]]];
+        }
+        
+        if (NO == [property_name isEqual:pkArr.lastObject]) {
+            [condition appendString:@" AND "];
+        }
+    }
+    
+    return condition;
+}
+
+
+- (NSString *)formatSingleConditionSQLWithObjc:(id<PPDataModelProtocol>)data_obj property_name:(NSString *)property_name
+{
+    NSObject *OBJECT = data_obj;
+    NSString* condition = nil;
+    if ([property_name isEqualToString:PPAUTOPRIMARYKEY]) {
+        NSNumber* autoPrimarykey = [OBJECT valueForKey:PPAUTOPRIMARYKEY];
+        if (autoPrimarykey) {
+            if ([autoPrimarykey respondsToSelector:@selector(stringValue)]) {
+                condition = [NSString stringWithFormat:@"%@ = '%@',", property_name, [autoPrimarykey stringValue]];
+            }
+        }
+    } else {
+        objc_property_t property = class_getProperty([data_obj class], property_name.UTF8String);
+        NSString *proName = [self processReservedWord:property_name];
+        if ([[self getSqlKindbyProperty:property] isEqualToString:@"text"]) {
+            
+            NSString* value = [NSString stringWithFormat:@"%@" , [OBJECT valueForKey:property_name]];
+            NSString* property_sign = [self getPropertySign:property];
+            if ([property_sign isEqualToString:@"@\"NSString\""] ||
+                [property_sign isEqualToString:@"@"]) {
+                value = [ self base64Str:value];
+            }
+            
+            condition = [NSString stringWithFormat:@"%@ = '%@',", proName, value];
+        } else {
+            condition = [NSString stringWithFormat:@"%@ = %@,", proName, [[OBJECT valueForKey:property_name] stringValue]];
+        }
+    }
+    if ([condition hasSuffix:@","]) {
+        NSMutableString *mutableString = [NSMutableString stringWithString:condition];
+        [mutableString replaceCharactersInRange:NSMakeRange(mutableString.length - 1, 1) withString:@""];
+        condition = mutableString;
+    }
+    
+    return condition;
+}
+
+
 
 #pragma mark - excuteSql Method
 - (NSArray*)excuteSql:(NSString*)sql
@@ -350,7 +541,7 @@
 
 
 #pragma mark - 解码 sqlite 保留字段
-- (NSString*)processReservedWord:(NSString*)property_key
+- (NSString*)xprocessReservedWord:(NSString*)property_key
 {
     NSString *str = property_key;
     
@@ -373,8 +564,38 @@
     return str;
 }
 
+- (NSString*)processReservedWord:(NSString*)property_key
+{
+    NSString *str = property_key;
+    
+    if ([self.sqliteReservedWords containsObject:[str uppercaseString]]) {
+        str = [NSString stringWithFormat:@"[%@]",property_key];
+    }
+    
+    return str;
+}
+
+
+
 #pragma mark-基本数据类型处理
 
+- (NSString *)base64Str:(NSString*)str
+{
+    if (_isEncode) {
+        return [PPDataBaseUtils base64EncodedString:str];
+    }
+    return str;
+}
+
+- (NSString*)base64Data:(NSData*)data
+{
+    return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+}
+
+- (NSData *)base64EncodedData:(NSData*)data
+{
+    return data;
+}
 
 - (NSString *)base64EncodedString:(NSString *)base64Str
 {

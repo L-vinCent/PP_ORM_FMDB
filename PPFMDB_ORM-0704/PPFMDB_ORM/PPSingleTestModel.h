@@ -16,6 +16,7 @@
 @property(nonatomic,strong)NSString *testName;
 @property(nonatomic,assign)int testClassNumber;
 @property(nonatomic,assign)int testStuId;
+@property(nonatomic,assign)int addId;
 
 
 @end

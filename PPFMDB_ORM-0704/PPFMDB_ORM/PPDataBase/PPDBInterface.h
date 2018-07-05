@@ -39,15 +39,24 @@
 
 
 
+
+
+
+
 #pragma mark - insert record Method
 
 - (NSString *)getInsertRecordQuery:(id<PPDataModelProtocol>)dataObject;
 - (NSString *)getInsertRecordQuery:(id<PPDataModelProtocol>)dataObject withTableName:(NSString *)tableName;
 - (void)insertCol:(NSString*)colName db:(FMDatabase*)db objClass:(Class)objClass;
 
-/// 处理和解码sqlite 保留字段
+/// 处理和解码sqlite 保留字段    有保留字段的需要加 中括号处理
 - (NSString*)processReservedWord:(NSString*)property_key;
 - (NSString*)DeProcessReservedWord:(NSString*)property_key;
+
+
+
+#pragma mark - SQL format Method
+- (NSString *)formatDeleteSQLWithObjc:(id<PPDataModelProtocol>)data_obj withTableName:(NSString*)tableName;
 
 
 - (NSString*)getPropertySign:(objc_property_t)property;

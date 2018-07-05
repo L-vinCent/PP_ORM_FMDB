@@ -11,18 +11,18 @@
 @implementation PPSingleTestModel
 PPDATABASE_IMPLEMENTATION_INJECT(PPSingleTestModel)
 
-- (NSArray<NSString *> *)g_GetCustomPrimarykey
-{
-    return @[@"testStuId"];
-}
-
-
-+ (nullable NSDictionary<NSString *, id> *)modelCustomPropertyMapper
-{
-    return @{
-             @"testStuId" :@"id",
-             };
-}
+//- (NSArray<NSString *> *)g_GetCustomPrimarykey
+//{
+//    return @[@"addId"];
+//}
+//
+//
+//+ (nullable NSDictionary<NSString *, id> *)modelCustomPropertyMapper
+//{
+//    return @{
+//             @"addId" :@"id",
+//             };
+//}
 
 /*打印模型所有属性值，方便调试,项目里可以放到基类
 若添加了 description 分类打印方法，以下不需要

@@ -26,13 +26,13 @@
  如果没有使用GDATABASE_IMPLEMENTATION_INJECT宏. 可以在<-g_getAllProperty>方法中过滤相关属性.
  @return 黑名单列表
  */
-- (NSDictionary<NSString *,NSString*> *)g_blackList;
 
 
 @optional
 /*
- 如果需要返回多个主键，实现该协议
+ 
  默认为自增主键'PPAUTOPRIMARYKEY'
+ 如果需要自定义主键，实现该方法 ，自定义主键 非自增，注意，主键值相同会覆盖
  */
 - (NSArray<NSString *> *)g_GetCustomPrimarykey;
 
@@ -40,6 +40,7 @@
 - (void)g_setValue:(id)value forUndefinedKey:(NSString *)key;
 
 
+- (NSDictionary<NSString *,NSString*> *)g_blackList;
 
 /**
  在使用GDATABASE_IMPLEMENTATION_INJECT宏的情况下, 模型类中如需额外初始化
