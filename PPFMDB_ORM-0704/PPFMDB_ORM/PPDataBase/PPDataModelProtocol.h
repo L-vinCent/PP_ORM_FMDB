@@ -21,9 +21,9 @@
 
 /**
  黑名单
- @breif: 如果模型中部分属性,无需存入数据库,在使用GDATABASE_IMPLEMENTATION_INJECT宏的情况下
+ @breif: 如果模型中部分属性,无需存入数据库,在使用PPDATABASE_IMPLEMENTATION_INJECT宏的情况下
  实现<+g_blackList>类方法,key为需要忽略的属性名.value可随意填写.
- 如果没有使用GDATABASE_IMPLEMENTATION_INJECT宏. 可以在<-g_getAllProperty>方法中过滤相关属性.
+ 如果没有使用PPDATABASE_IMPLEMENTATION_INJECT宏. 可以在<-g_getAllProperty>方法中过滤相关属性.
  @return 黑名单列表
  */
 
@@ -43,7 +43,7 @@
 - (NSDictionary<NSString *,NSString*> *)g_blackList;
 
 /**
- 在使用GDATABASE_IMPLEMENTATION_INJECT宏的情况下, 模型类中如需额外初始化
+ 在使用PPDATABASE_IMPLEMENTATION_INJECT宏的情况下, 模型类中如需额外初始化
  请实现'g_init'. 或者自定义其他构造方法.调用 '[super init]'
  */
 - (void)g_init;

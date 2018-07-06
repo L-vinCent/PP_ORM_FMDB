@@ -157,4 +157,120 @@
     return [self getAllObjectsWithClass:clazz withTableName:tableName];
 }
 
+
+
+/**
+ 修改数据
+ */
+
+- (BOOL)updateObjectClazz:(Class)clazz keyValues:(NSDictionary *)keyValues contionKeyDic:(NSDictionary *)conDic
+{
+    if (keyValues.allValues.count <= 0 || !keyValues) {
+        return NO;
+    }
+    
+    NSString *tableName = NSStringFromClass(clazz);
+    
+    return  [self updateTableName:tableName ObjectClazz:clazz keyValues:keyValues contionKeyDic:conDic];
+
+}
+
+- (BOOL)updateTableName:(NSString*)tableName ObjectClazz:(Class)clazz keyValues:(NSDictionary *)keyValues contionKeyDic:(NSDictionary *)conDic
+{
+    //UPDATE GAppsDataViewModel SET fields='我被修改了' WHERE dataIndex = 140732710210224 and dataGroup = 4522822591
+    if (keyValues.allValues.count <= 0 || !keyValues) {
+        return NO;
+    }
+    
+    __block NSString* sql = [NSString stringWithFormat:@"UPDATE %s SET", [tableName UTF8String]];
+
+    [keyValues enumerateKeysAndObjectsUsingBlock:^(NSString*  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+       
+        if ([self.dataBase columnExists:key inTableWithName:tableName])
+        {
+            
+            objc_property_t property = class_getProperty(clazz, key.UTF8String);
+            NSString *property_value = @"";
+            if ([[self getSqlKindbyProperty:property] isEqualToString:@"text"]) {
+                
+                NSString* value = [NSString stringWithFormat:@"%@" , obj];
+                NSString* property_sign = [self getPropertySign:property];
+                if ([property_sign isEqualToString:@"@\"NSString\""] ||
+                    [property_sign isEqualToString:@"@"]) {
+                    value = [self base64Str:value];
+                }
+                
+                property_value = [NSString stringWithFormat:@"'%@'", value];;
+            }else{
+                property_value = [NSString stringWithFormat:@"%@", [obj stringValue]];
+            }
+            NSString *keyName = [self processReservedWord:key];
+            sql = [NSString stringWithFormat:@"%@ %@=%@,",sql,keyName,property_value];
+            
+        }
+  
+    }];
+    
+    sql = [self removeLastOneChar:sql];
+
+    __block NSMutableString *conStr = @"".mutableCopy;
+    [conDic enumerateKeysAndObjectsUsingBlock:^(NSString*  _Nonnull key, NSString*  _Nonnull obj, BOOL * _Nonnull stop) {
+        
+        
+        NSString *tempStr = [NSString stringWithFormat:@"%@ = %@",[self processReservedWord:key],obj]; //dataIndex = 140732710210224
+        
+        if (!kStringIsEmpty(conStr)) {
+            NSMutableString *temp = @"".mutableCopy;
+            [temp appendString:@" and "];
+            [temp appendString:tempStr];
+            tempStr = temp;
+        }
+        
+        [conStr appendString:tempStr];
+        
+    }];
+    
+    NSLog(@"---%@",conStr);
+    
+    sql = [NSString stringWithFormat:@"%@ WHERE %@",sql,conStr];
+    
+    __block BOOL sucess = NO;
+    [self.dbQueue inDatabase:^(FMDatabase * _Nonnull db) {
+        
+        sucess = [db executeUpdate:sql,nil];
+        
+    }];
+    return sucess;
+ 
+}
+
+#pragma mark -- 条件语句查询
+/// 根据condition获取数据表中符合条件的数据
+- (NSArray *)getObjectsWithClass:(Class)clazz whereCondDic:(NSDictionary *)dic
+{
+//    select * from SQLiteReserveModel where [desc] ='desc'
+
+    
+    NSString *tableName = NSStringFromClass(clazz);
+    NSString* sql = [NSString stringWithFormat:@"select * from %s where ", [tableName UTF8String]];
+    
+    __block NSMutableString *conStr = @"".mutableCopy;
+    [dic enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+        NSString *tempStr = [NSString stringWithFormat:@"%@ = '%@'",[self processReservedWord:key],obj]; //dataIndex = 140732710210224
+        
+        if (!kStringIsEmpty(conStr)) {
+            NSMutableString *temp = @"".mutableCopy;
+            [temp appendString:@" and "];
+            [temp appendString:tempStr];
+            tempStr = temp;
+        }
+        
+        [conStr appendString:tempStr];
+    }];
+    
+    sql = [NSString stringWithFormat:@"%@ %@", sql,conStr];
+
+    
+    return [self excuteSql:sql withClass:clazz];
+}
 @end

@@ -18,7 +18,7 @@
  
  @param dbPath 如果没有文件会默认创建xx.db 文件
  isEncrypt 是否开启对字符串进行base64编码,default不开启
- @return GDataBase实例
+ @return PPDataBase实例
  */
 + (instancetype)databaseWithPath:(NSString *)dbPath;
 + (instancetype)databaseWithPath:(NSString *)dbPath isBase64Encode:(BOOL)isEncode;
@@ -28,7 +28,7 @@
 
 /**
  不开启事务， 向数据库添加一条数据
- @return PPDataBaseD实例
+ @return PPDataBase实例
  */
 - (BOOL)addObject:(id<PPDataModelProtocol>)obj;
 
@@ -68,6 +68,36 @@
 - (BOOL)deleteObjects:(NSArray<id<PPDataModelProtocol>>*)objs;
 - (BOOL)deleteObjects:(NSArray<id<PPDataModelProtocol>>*)objs withTableName:(NSString*)tableName;
 
+
+/**
+ 更新数据
+ @param clazz 要更新的数据模型,默认表名为 clazz 类名
+ @param keyValues 需要更新的字段键值对 <key:属性名 value:需要更新的值>
+ @param conDic 条件语句对,允许多条件语句 <key:属性名 value:需要更新的值> 就是  WHERE key = value
+ @return YES/NO
+ */
+
+- (BOOL)updateObjectClazz:(Class)clazz keyValues:(NSDictionary *)keyValues contionKeyDic:(NSDictionary *)conDic;
+
+/**
+ 更新数据
+ @param tableName 如果不传，默认 clazz 类名
+ @param clazz 要更新的数据模型
+ @param keyValues 需要更新的字段键值对 <key:属性名 value:需要更新的值>
+ @param conDic 条件语句对,允许多条件语句 <key:属性名 value:需要更新的值> 就是  WHERE key = value
+ @return YES/NO
+ */
+- (BOOL)updateTableName:(NSString*)tableName ObjectClazz:(Class)clazz keyValues:(NSDictionary *)keyValues contionKeyDic:(NSDictionary *)conDic;
+
+
+/**
+ 条件语句查询
+
+ @param clazz 模型类
+ @param dic 条件字段键值对 <key:属性名 value:需要查询的条件值>
+ @return 数组<clazz>
+ */
+- (NSArray *)getObjectsWithClass:(Class)clazz whereCondDic:(NSDictionary *)dic;
 
 
 @end

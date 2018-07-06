@@ -63,5 +63,12 @@
 - (NSString*)getSqlKindbyProperty:(objc_property_t)property;
 
 
+#pragma mark - help Method
+- (NSData *)convertHexStrToData:(NSString *)_str;
+- (NSString*)formatConditionString:(NSString*)condition;
+- (NSString*)removeLastOneChar:(NSString*)origin;
+- (NSString *)base64Str:(NSString*)str;
+- (NSString *)base64EncodedString:(NSString *)base64Str;
+
 
 @end

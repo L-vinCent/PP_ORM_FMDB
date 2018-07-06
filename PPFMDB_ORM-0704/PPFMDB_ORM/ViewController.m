@@ -54,6 +54,8 @@
                        @"批量数据插入,开启事务",
                        @"查询所有数据,开启事务",
                        @"根据主键删除模型",
+                       @"根据条件修改",
+                       @"根据条件查询数据",
                        ];
     }
     return _dataArray;
@@ -71,6 +73,13 @@
 
 }
 
+- (void)updateSqlData
+{
+    BOOL isSucess = [self.database updateObjectClazz:[PPSingleTestModel class] keyValues:@{@"testName":@"多条件测试"} contionKeyDic:@{@"testScore":@"88",PPAUTOPRIMARYKEY:@"4"}];
+    NSLog(isSucess?@"更新成功":@"更新失败");
+    
+    
+}
 
 -(void)getAllSQLData
 {
@@ -116,6 +125,22 @@
     BOOL delete = [self.database deleteObject:model];
     NSLog(@"删除状态 --- %d",delete);
     
+    
+}
+
+-(void)sqlSearchCondition
+{
+    NSArray *all = [self.database getObjectsWithClass:[PPSingleTestModel class] whereCondDic:@{PPAUTOPRIMARYKEY:@"2",@"testName":@"盼盼"}];
+    if(!all.count) {
+        NSLog(@"未查询到对应数据");
+        return;
+    }
+    
+    for (PPSingleTestModel *model in all) {
+        
+        NSLog(@"%@",[model description]);
+        
+    }
     
 }
 
@@ -165,6 +190,14 @@
     if (indexPath.row == 3) {
         
         [self deleteByMainKey];
+    }
+    if (indexPath.row == 4) {
+        
+        [self updateSqlData];
+    }
+    if (indexPath.row == 5) {
+        
+        [self sqlSearchCondition];
     }
 }
 @end

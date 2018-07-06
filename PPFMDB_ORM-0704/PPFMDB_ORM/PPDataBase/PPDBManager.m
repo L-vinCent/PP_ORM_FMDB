@@ -607,6 +607,17 @@
     return base64Str;
 }
 
+- (NSString*)removeLastOneChar:(NSString*)origin
+{
+    NSString* cutted;
+    if([origin length] > 0){
+        cutted = [origin substringToIndex:([origin length]-1)];// 去掉最后一个","
+    }else{
+        cutted = origin;
+    }
+    return cutted;
+}
+
 
 - (NSString*)getPropertySign:(objc_property_t)property
 {

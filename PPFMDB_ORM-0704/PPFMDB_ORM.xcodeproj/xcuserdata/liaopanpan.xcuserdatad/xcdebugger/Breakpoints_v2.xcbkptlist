@@ -20,13 +20,60 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PPFMDB_ORM/PPDataBase/PPDataBase.m"
-            timestampString = "552474345.876039"
+            timestampString = "552557300.568487"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "55"
-            endingLineNumber = "55"
-            landmarkName = "-addObject:WithTableName:"
+            startingLineNumber = "238"
+            endingLineNumber = "238"
+            landmarkName = "-updateTableName:ObjectClazz:keyValues:contionKeyDic:"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[PPDataBase updateTableName:ObjectClazz:keyValues:contionKeyDic:]"
+                  moduleName = "PPFMDB_ORM"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/liaopanpan/Desktop/PP_ORM_FMDB/PPFMDB_ORM-0704/PPFMDB_ORM/PPDataBase/PPDataBase.m"
+                  timestampString = "552557300.613373"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "238"
+                  endingLineNumber = "238"
+                  offsetFromSymbolStart = "1262">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__66-[PPDataBase updateTableName:ObjectClazz:keyValues:contionKeyDic:]_block_invoke.132"
+                  moduleName = "PPFMDB_ORM"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/liaopanpan/Desktop/PP_ORM_FMDB/PPFMDB_ORM-0704/PPFMDB_ORM/PPDataBase/PPDataBase.m"
+                  timestampString = "552557300.615124"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "238"
+                  endingLineNumber = "238"
+                  offsetFromSymbolStart = "16">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__destroy_helper_block_.134"
+                  moduleName = "PPFMDB_ORM"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/liaopanpan/Desktop/PP_ORM_FMDB/PPFMDB_ORM-0704/PPFMDB_ORM/PPDataBase/PPDataBase.m"
+                  timestampString = "552557300.61695"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "238"
+                  endingLineNumber = "238"
+                  offsetFromSymbolStart = "17">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -36,76 +83,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PPFMDB_ORM/PPDataBase/PPDataBase.m"
-            timestampString = "552474345.876103"
+            timestampString = "552557300.56856"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "75"
-            endingLineNumber = "75"
-            landmarkName = "-addObjectsInTransaction:WithTableName:"
+            startingLineNumber = "271"
+            endingLineNumber = "271"
+            landmarkName = "-getObjectsWithClass:whereCondDic:"
             landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "PPFMDB_ORM/PPDataBase/PPDBManager.m"
-            timestampString = "552475586.127614"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "53"
-            endingLineNumber = "53"
-            landmarkName = "-tableCheck:withTableName:"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[PPDBManager tableCheck:withTableName:]"
-                  moduleName = "PPFMDB_ORM"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/liaopanpan/Desktop/PP_ORM_FMDB/PPFMDB_ORM-0704/PPFMDB_ORM/PPDataBase/PPDBManager.m"
-                  timestampString = "552472952.646751"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "53"
-                  endingLineNumber = "53"
-                  offsetFromSymbolStart = "147">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "__40-[PPDBManager tableCheck:withTableName:]_block_invoke"
-                  moduleName = "PPFMDB_ORM"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/liaopanpan/Desktop/PP_ORM_FMDB/PPFMDB_ORM-0704/PPFMDB_ORM/PPDataBase/PPDBManager.m"
-                  timestampString = "552472952.648343"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "53"
-                  endingLineNumber = "53"
-                  offsetFromSymbolStart = "39">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "__destroy_helper_block_"
-                  moduleName = "PPFMDB_ORM"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/liaopanpan/Desktop/PP_ORM_FMDB/PPFMDB_ORM-0704/PPFMDB_ORM/PPDataBase/PPDBManager.m"
-                  timestampString = "552472952.650117"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "53"
-                  endingLineNumber = "53"
-                  offsetFromSymbolStart = "16">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
