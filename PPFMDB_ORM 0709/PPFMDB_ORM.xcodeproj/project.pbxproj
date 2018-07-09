@@ -15,6 +15,7 @@
 		672DEE1F20EB6DA40023559B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 672DEE1E20EB6DA40023559B /* main.m */; };
 		672DEE2920EB6DA50023559B /* PPFMDB_ORMTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 672DEE2820EB6DA50023559B /* PPFMDB_ORMTests.m */; };
 		672DEE3420EB6DA50023559B /* PPFMDB_ORMUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 672DEE3320EB6DA50023559B /* PPFMDB_ORMUITests.m */; };
+		67DD3AC420F3331900D92674 /* PPInsertTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 67DD3AC320F3331900D92674 /* PPInsertTest.m */; };
 		67ED899420EC5ECD00DB1C2F /* PPDataBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 67ED899320EC5ECD00DB1C2F /* PPDataBase.m */; };
 		67ED89A220EC62D400DB1C2F /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 67ED899720EC62D400DB1C2F /* FMDatabase.m */; };
 		67ED89A320EC62D400DB1C2F /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 67ED899920EC62D400DB1C2F /* FMDatabaseAdditions.m */; };
@@ -63,6 +64,7 @@
 		672DEE3320EB6DA50023559B /* PPFMDB_ORMUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PPFMDB_ORMUITests.m; sourceTree = "<group>"; };
 		672DEE3520EB6DA50023559B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		672DEE4B20EB7CD80023559B /* PPDataModelProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPDataModelProtocol.h; sourceTree = "<group>"; };
+		67DD3AC320F3331900D92674 /* PPInsertTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PPInsertTest.m; sourceTree = "<group>"; };
 		67ED899220EC5ECD00DB1C2F /* PPDataBase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPDataBase.h; sourceTree = "<group>"; };
 		67ED899320EC5ECD00DB1C2F /* PPDataBase.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PPDataBase.m; sourceTree = "<group>"; };
 		67ED899620EC62D400DB1C2F /* FMDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabase.h; sourceTree = "<group>"; };
@@ -158,6 +160,7 @@
 			isa = PBXGroup;
 			children = (
 				672DEE2820EB6DA50023559B /* PPFMDB_ORMTests.m */,
+				67DD3AC320F3331900D92674 /* PPInsertTest.m */,
 				672DEE2A20EB6DA50023559B /* Info.plist */,
 			);
 			path = PPFMDB_ORMTests;
@@ -364,6 +367,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				67DD3AC420F3331900D92674 /* PPInsertTest.m in Sources */,
 				672DEE2920EB6DA50023559B /* PPFMDB_ORMTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

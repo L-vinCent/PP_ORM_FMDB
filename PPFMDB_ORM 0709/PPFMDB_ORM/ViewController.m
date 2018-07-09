@@ -27,10 +27,10 @@
 
 - (void)loadDataBase
 {
+    
     NSString *path = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     path = [path stringByAppendingPathComponent:@"PPDATA.db"];
     self.database = [PPDataBase databaseWithPath:path];
-    
     
 }
 
@@ -56,6 +56,9 @@
                        @"根据主键删除模型",
                        @"根据条件修改",
                        @"根据条件查询数据",
+                       @"条件查询,做排序处理",
+                       @"获取表中符合条件的数据条数",
+                       @"删除表",
                        ];
     }
     return _dataArray;
@@ -65,7 +68,7 @@
 {
     PPSingleTestModel *model = [[PPSingleTestModel alloc]init];
     model.testName = @"哈";
-    model.testScore = 88;
+    model.testScore = arc4random()%100;
     model.testTeacher = @"大老师";
     model.addId = 1;
     BOOL isSucess = [self.database addObject:model];
@@ -144,6 +147,37 @@
     
 }
 
+-(void)sqlSearchConditionByOrderLimit
+{
+    NSArray *all = [self.database getObjectsWithClass:[PPSingleTestModel class] withTableName:nil orderBy:@"testScore" up:YES limit:3 condDic:@{@"testName":@"哈"}];
+    if(!all.count) {
+        NSLog(@"未查询到对应数据");
+        return;
+    }
+    
+    for (PPSingleTestModel *model in all) {
+        
+        NSLog(@"%@",[model description]);
+        
+    }
+    
+}
+
+-(void)getCountSearchCondition
+{
+    
+    NSInteger count = [self.database countInDataBaseWithClass:[PPSingleTestModel class] withTableName:nil condDic:@{@"testName":@"哈"}];
+    
+    NSLog(@"----%ld",count);
+}
+
+-(void)removeDB
+{
+    
+  BOOL isDelete =  [self.database removeTable:NSStringFromClass([PPSingleTestModel class])];
+NSLog(@"%@",isDelete?@"删除成功":@"删除失败");
+    
+}
 #pragma mark -- TableView DataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -198,6 +232,18 @@
     if (indexPath.row == 5) {
         
         [self sqlSearchCondition];
+    }
+    if (indexPath.row == 6) {
+        
+        [self sqlSearchConditionByOrderLimit];
+    }
+    if (indexPath.row == 7) {
+        
+        [self getCountSearchCondition];
+    }
+    if (indexPath.row == 8) {
+        
+        [self removeDB];
     }
 }
 @end
